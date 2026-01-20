@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build
+dist
+dist-ssr
+build
+
+# Environment
+*.local
+.env
+.env.*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Vercel
+.vercel
