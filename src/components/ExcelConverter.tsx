@@ -8,19 +8,15 @@ import {
   ArrowRight,
   Trash2,
   RefreshCw,
-  LogOut,
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 import { parseExcelFile, createExcelFile, transformData, ExcelData } from '../services/excelService';
 import { analyzeExcelWithAI } from '../services/geminiService';
 
 export const ExcelConverter: React.FC = () => {
-  const { user, signOut } = useAuth();
   const [sourceData, setSourceData] = useState<ExcelData | null>(null);
   const [targetFormat, setTargetFormat] = useState('');
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
@@ -53,7 +49,6 @@ export const ExcelConverter: React.FC = () => {
   };
 
   const processFile = async (file: File) => {
-    setLoading(true);
     try {
       const sheets = await parseExcelFile(file);
       if (sheets.length > 0) {
@@ -64,8 +59,6 @@ export const ExcelConverter: React.FC = () => {
     } catch (error) {
       console.error('파일 처리 오류:', error);
       alert('파일을 처리하는 중 오류가 발생했습니다.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -117,15 +110,6 @@ export const ExcelConverter: React.FC = () => {
               <h1 className="text-xl font-bold">Excel Formatter</h1>
               <p className="text-xs text-zinc-500">AI 엑셀 변환기</p>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-zinc-400">{user?.email}</span>
-            <button
-              onClick={signOut}
-              className="p-2 text-zinc-400 hover:text-white transition-colors"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </header>
