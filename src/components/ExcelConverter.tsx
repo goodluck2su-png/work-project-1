@@ -244,39 +244,45 @@ export const ExcelConverter: React.FC = () => {
               </button>
             </div>
 
-            {/* Mapping Result */}
+            {/* Mapping Result or Error Message */}
             <AnimatePresence>
-              {Object.keys(columnMapping).length > 0 && (
+              {(Object.keys(columnMapping).length > 0 || suggestions.length > 0) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className="bg-zinc-900/50 border border-white/10 rounded-xl p-6 space-y-4"
                 >
-                  <h3 className="font-medium text-teal-400">컬럼 매핑 결과</h3>
-                  <div className="space-y-2">
-                    {Object.entries(columnMapping).map(([target, source]) => (
-                      <div
-                        key={target}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <span className="px-2 py-1 bg-zinc-800 rounded text-zinc-300">
-                          {source}
-                        </span>
-                        <ArrowRight className="w-4 h-4 text-zinc-500" />
-                        <span className="px-2 py-1 bg-teal-900/50 rounded text-teal-300">
-                          {target}
-                        </span>
+                  {Object.keys(columnMapping).length > 0 && (
+                    <>
+                      <h3 className="font-medium text-teal-400">컬럼 매핑 결과</h3>
+                      <div className="space-y-2">
+                        {Object.entries(columnMapping).map(([target, source]) => (
+                          <div
+                            key={target}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <span className="px-2 py-1 bg-zinc-800 rounded text-zinc-300">
+                              {source}
+                            </span>
+                            <ArrowRight className="w-4 h-4 text-zinc-500" />
+                            <span className="px-2 py-1 bg-teal-900/50 rounded text-teal-300">
+                              {target}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </>
+                  )}
 
                   {suggestions.length > 0 && (
-                    <div className="pt-4 border-t border-white/10">
-                      <h4 className="text-sm text-zinc-400 mb-2">AI 제안</h4>
+                    <div className={Object.keys(columnMapping).length > 0 ? "pt-4 border-t border-white/10" : ""}>
+                      <h4 className="text-sm text-zinc-400 mb-2">
+                        {Object.keys(columnMapping).length > 0 ? 'AI 제안' : 'AI 메시지'}
+                      </h4>
                       <ul className="space-y-1">
                         {suggestions.map((suggestion, i) => (
-                          <li key={i} className="text-sm text-zinc-300">
+                          <li key={i} className={`text-sm ${Object.keys(columnMapping).length > 0 ? 'text-zinc-300' : 'text-yellow-400'}`}>
                             • {suggestion}
                           </li>
                         ))}
@@ -284,13 +290,15 @@ export const ExcelConverter: React.FC = () => {
                     </div>
                   )}
 
-                  <button
-                    onClick={handleDownload}
-                    className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                  >
-                    <Download className="w-5 h-5" />
-                    변환된 파일 다운로드
-                  </button>
+                  {Object.keys(columnMapping).length > 0 && (
+                    <button
+                      onClick={handleDownload}
+                      className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                    >
+                      <Download className="w-5 h-5" />
+                      변환된 파일 다운로드
+                    </button>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
